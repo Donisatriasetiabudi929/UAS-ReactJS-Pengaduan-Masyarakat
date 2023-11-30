@@ -9,6 +9,7 @@ import { IoIosHome } from "react-icons/io";
 import { BsCalendarDate } from "react-icons/bs";
 import { LiaCreativeCommonsNd } from "react-icons/lia";
 import { useReactToPrint } from 'react-to-print';
+import CsvDownloader from 'react-csv-downloader';
 
 
 
@@ -178,18 +179,29 @@ const PengaduanPage = () => {
                                 <option value="Belum Ditanggapi">Belum Ditanggapi</option>
                                 <option value="Sudah Ditanggapi">Sudah Ditanggapi</option>
                             </select>
+                            <div className='flex space-x-2'>
+                                <button
+                                    onClick={generatePdf}
+                                    className='w-[200px] px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 focus:outline-none ml-5'
+                                >
+                                    Cetak PDF
+                                </button>
+                                <CsvDownloader
+                                    datas={pengaduanData}
+                                    text="Cetak Excel"
+                                    filename={`Data pengaduan_` + new Date().toLocaleString()}
+                                    extension=".csv"
+                                    className='w-[200px] px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 focus:outline-none ml-5'
+                                />
+                            </div>
+
 
                         </div>
                     )}
 
 
 
-                    <button
-                        onClick={generatePdf}
-                        className='w-[200px] px-4 py-2 bg-regal-blue text-white rounded-md hover:bg-blue-600 focus:outline-none ml-5'
-                    >
-                        Cetak
-                    </button>
+
                     <div className="overflow-x-auto mt-7">
                         <div ref={componentPdf} style={{ width: '98%', margin: 'auto' }}>
                             <div className='text-center hidden print:block'>
