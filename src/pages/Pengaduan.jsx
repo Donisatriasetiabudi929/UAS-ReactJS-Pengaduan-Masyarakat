@@ -9,9 +9,9 @@ import { IoIosHome } from "react-icons/io";
 import { BsCalendarDate } from "react-icons/bs";
 import { LiaCreativeCommonsNd } from "react-icons/lia";
 import { useReactToPrint } from 'react-to-print';
-import CsvDownloader from 'react-csv-downloader';
-
-
+// import {CsvDownloader} from 'react-csv-downloader';
+// import CsvDownload from 'react-csv-downloader';
+import { useDownloadExcel } from 'react-export-table-to-excel';
 
 
 
@@ -33,11 +33,9 @@ const PengaduanPage = () => {
 
     useEffect(() => {
 
-        // Check if the role is either "Infrastruktur" or "Sosial"
         if (role === 'Infrastruktur' || role === 'Sosial') {
             const apiUrl = 'https://vdzgxgqr-4080.asse.devtunnels.ms/pengaduan/petugas/get';
 
-            // Fetch data with authorization token
             fetch(apiUrl, {
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`,
@@ -51,7 +49,6 @@ const PengaduanPage = () => {
                     console.error('Error fetching pengaduan data:', error);
                 });
         } else {
-            // Fetch data without authorization token
             fetch('https://vdzgxgqr-4080.asse.devtunnels.ms/pengaduan/all')
                 .then(response => response.json())
                 .then(data => {
@@ -119,7 +116,6 @@ const PengaduanPage = () => {
         })
             .then(response => response.json())
             .then(data => {
-                // Handle success, e.g., close the modal, refresh the data, etc.
                 console.log('Tanggapan sent successfully:', data);
                 setLoadingTanggapan(false);
                 setIsTanggapanModalVisible(false);
@@ -147,6 +143,14 @@ const PengaduanPage = () => {
         onAfterPrint: () => alert("Data pengaduan berhasil di cetak")
     });
 
+    const tableRef = useRef(null);
+
+    const { onDownload } = useDownloadExcel({
+        currentTableRef: tableRef.current,
+        filename: "Data pengaduan",
+        sheet: "Data pengaduan"
+    });
+
     return (
         <div className='flex w-full bg-gray-100 h-fit font-Poppins'>
             <div className="w-[260px]"></div>
@@ -156,54 +160,89 @@ const PengaduanPage = () => {
 
                 <div className="w-[1200px] mx-auto mt-7">
                     <h2 className="text-2xl font-semibold mb-4">Daftar Pengaduan</h2>
-                    {role === 'Admin' && (
-                        <div className="flex space-x-2">
-                            <select
-                                name="jenis_pengaduanFilter"
-                                value={selectedJenis_pengaduan}
-                                onChange={(e) => setSelectedJenis_pengaduan(e.target.value)}
-                                className='w-[200px] h-10 p-1 shadow-lg rounded-lg'
-                            >
-                                <option value="">Semua Jenis</option>
-                                <option value="Infrastruktur">Infrastruktur</option>
-                                <option value="Sosial">Sosial</option>
-                            </select>
 
-                            <select
-                                name="statusFilter"
-                                value={selectedStatus}
-                                onChange={(e) => setSelectedStatus(e.target.value)}
-                                className='w-[200px] h-10 p-1 shadow-lg rounded-lg'
-                            >
-                                <option value="">Semua Status</option>
-                                <option value="Belum Ditanggapi">Belum Ditanggapi</option>
-                                <option value="Sudah Ditanggapi">Sudah Ditanggapi</option>
-                            </select>
-                            <div className='right-0'>
-                                <button
-                                    onClick={generatePdf}
-                                    className='ml-[353px] w-[200px] px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 focus:outline-none ml-5'
+                    <div className='w-[1200px] mx-auto mt-7'>
+                        {role === 'Admin' && (
+                            <div className="flex space-x-5">
+                                <select
+                                    name="jenis_pengaduanFilter"
+                                    value={selectedJenis_pengaduan}
+                                    onChange={(e) => setSelectedJenis_pengaduan(e.target.value)}
+                                    className='w-[200px] h-10 p-1 shadow-lg rounded-lg ml-3'
                                 >
-                                    Cetak PDF
-                                </button>
-                                <CsvDownloader
-                                    datas={pengaduanData}
-                                    text="Cetak Excel"
-                                    filename={`Data pengaduan_` + new Date().toLocaleString()}
-                                    extension=".csv"
-                                    className='w-[200px] px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 focus:outline-none ml-5'
-                                />
+                                    <option value="">Semua Jenis</option>
+                                    <option value="Infrastruktur">Infrastruktur</option>
+                                    <option value="Sosial">Sosial</option>
+                                </select>
+
+                                <select
+                                    name="statusFilter"
+                                    value={selectedStatus}
+                                    onChange={(e) => setSelectedStatus(e.target.value)}
+                                    className='w-[200px] h-10 p-1 shadow-lg rounded-lg ml-5'
+                                >
+                                    <option value="">Semua Status</option>
+                                    <option value="Belum Ditanggapi">Belum Ditanggapi</option>
+                                    <option value="Sudah Ditanggapi">Sudah Ditanggapi</option>
+                                </select>
+
+
+
                             </div>
 
-
+                        )}
+                        <div className='mt-5'>
+                            <button
+                                onClick={generatePdf}
+                                className='w-[200px] px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 focus:outline-none ml-3'
+                            >
+                                Cetak PDF
+                            </button>
+                            <button onClick={onDownload} className='w-[200px] px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 focus:outline-none ml-3'>EXCEL</button>
+                            {/* <CsvDownload
+                                datas={pengaduanData}
+                                text="Cetak Excel"
+                                filename={`Data pengaduan_` + new Date().toLocaleString()}
+                                extension=".csv"
+                                className='w-[200px] px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 focus:outline-none ml-5'
+                            /> */}
                         </div>
-                    )}
+
+                    </div>
+
+                    <table ref={tableRef} className="min-w-full bg-white border border-gray-300 text-sm hidden">
+                                <thead>
+                                    <tr className="bg-gray-100">
+                                        <th className="p-3 border border-gray-300">NIK</th>
+                                        <th className="p-3 border border-gray-300">Nama</th>
+                                        <th className="p-3 border border-gray-300">Tanggal Pengaduan</th>
+                                        <th className="p-3 border border-gray-300">Jenis Pengaduan</th>
+                                        <th className="p-3 border border-gray-300 w-[300px]">Isi Laporan</th>
+                                        <th className="p-3 border border-gray-300">Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {filteredPengaduanData.map(pengaduan => (
+                                        <tr key={pengaduan._id} className="hover:bg-gray-50 transition-all">
+                                            <td className="p-3 border border-gray-300">{pengaduan.nik}</td>
+                                            <td className="p-3 border border-gray-300">{pengaduan.nama}</td>
+                                            <td className="p-3 border border-gray-300">{pengaduan.tanggal_pengaduan}</td>
+                                            <td className="p-3 border border-gray-300">{pengaduan.jenis_pengaduan}</td>
+                                            <td className="p-3 border border-gray-300">{pengaduan.isi_laporan}</td>
+                                            <td className="p-3 border border-gray-300">{pengaduan.status}</td>
+                                            
+                        
+
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
 
 
 
 
                     <div className="overflow-x-auto mt-7">
-                        <div ref={componentPdf} style={{ width: '98%', margin: 'auto' }}>
+                        <div ref={componentPdf}  style={{ width: '98%', margin: 'auto' }}>
                             <div className='text-center hidden print:block'>
                                 <h2 className='font-bold text-xl mt-5 mb-2'>Data Pengaduan Masyarakat</h2>
                                 <p className='mb-5'>Tanggal Cetak : {new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}</p>
@@ -413,7 +452,7 @@ const PengaduanPage = () => {
                                     ))}
                                 </ul>
 
-                                {/* Render textarea and button based on role */}
+                                { }
                                 {canProvideResponse && (
                                     <div className='p-5'>
                                         <label htmlFor="tanggapanInput" className="block mt-4">
@@ -436,7 +475,7 @@ const PengaduanPage = () => {
                                     </div>
                                 )}
 
-                                {/* Render message for Admin */}
+                                { }
                                 {isAdmin && (
                                     <p className="mt-4 text-red-500 p-5 text-center">Admin tidak dapat memberikan tanggapan</p>
                                 )}
@@ -444,11 +483,7 @@ const PengaduanPage = () => {
                             </div>
                         </div>
 
-                        {/* <div className="close-button h-fit w-fit ml-auto mt-0 cursor-pointer" onClick={() => setIsTanggapanModalVisible(false)}>
-                                <div className='ml-auto w-[40px] flex h-[40px] bg-unggu  border p-1 rounded-[100%]'>
-                                    <p className='texe-black w-fit h-fit text-white m-auto'>X</p>
-                                </div>
-                            </div> */}
+                        { }
                     </div>
 
                 )}
