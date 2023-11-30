@@ -179,10 +179,10 @@ const PengaduanPage = () => {
                                 <option value="Belum Ditanggapi">Belum Ditanggapi</option>
                                 <option value="Sudah Ditanggapi">Sudah Ditanggapi</option>
                             </select>
-                            <div className='flex space-x-2'>
+                            <div className='right-0'>
                                 <button
                                     onClick={generatePdf}
-                                    className='w-[200px] px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 focus:outline-none ml-5'
+                                    className='ml-[353px] w-[200px] px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 focus:outline-none ml-5'
                                 >
                                     Cetak PDF
                                 </button>
