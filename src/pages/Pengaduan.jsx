@@ -178,18 +178,18 @@ const PengaduanPage = () => {
                                 <option value="Belum Ditanggapi">Belum Ditanggapi</option>
                                 <option value="Sudah Ditanggapi">Sudah Ditanggapi</option>
                             </select>
-                            
+
                         </div>
                     )}
 
 
 
-<button
-                                onClick={generatePdf}
-                                className='w-[200px] px-4 py-2 bg-regal-blue text-white rounded-md hover:bg-blue-600 focus:outline-none ml-5'
-                            >
-                                Cetak
-                            </button>
+                    <button
+                        onClick={generatePdf}
+                        className='w-[200px] px-4 py-2 bg-regal-blue text-white rounded-md hover:bg-blue-600 focus:outline-none ml-5'
+                    >
+                        Cetak
+                    </button>
                     <div className="overflow-x-auto mt-7">
                         <div ref={componentPdf} style={{ width: '98%', margin: 'auto' }}>
                             <div className='text-center hidden print:block'>
