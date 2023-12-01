@@ -12,6 +12,8 @@ import { Profile } from './pages/Profile'
 import Masyarakat from './pages/Masyarakat'
 import Petugas from './pages/Petugas'
 import { InputProfile } from './pages/inputprofile'
+import ProtectedRoute from './pages/roleAuth'
+import Error from './pages/errorpage'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -24,11 +26,17 @@ function App() {
           <Route path='/' element={<Login />}/>
           <Route path='/Home' element={<Home />}/>
           <Route path='/User' element={<User />}/>
-          <Route path='/Pengaduan' element={<PengaduanPage />}/>
-          <Route path='/Profile' element={<Profile />}/>
-          <Route path='/Masyarakat' element={<Masyarakat />}/>
-          <Route path='/Petugas' element={<Petugas />}/>
-          <Route path='/InputProfile' element={<InputProfile />}/>
+          <Route path='/error' element={<Error />}/>
+          <Route element={<ProtectedRoute allowedRoles={['Admin', 'Infrastruktur', 'Sosial']} />}>
+            <Route path='/Masyarakat' element={<Masyarakat />}/>
+            <Route path='/Petugas' element={<Petugas />}/>
+          </Route>
+
+          <Route element={<ProtectedRoute allowedRoles={['Admin', 'Infrastruktur', 'Sosial']} />}>
+            <Route path='/Pengaduan' element={<PengaduanPage  />}></Route>
+            <Route path='/Profile' element={<Profile />}/>
+            <Route path='/InputProfile' element={<InputProfile />}/>
+          </Route>
       </Routes>
     </BrowserRouter>
   )

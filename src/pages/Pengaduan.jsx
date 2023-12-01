@@ -119,6 +119,8 @@ const PengaduanPage = () => {
                 console.log('Tanggapan sent successfully:', data);
                 setLoadingTanggapan(false);
                 setIsTanggapanModalVisible(false);
+                window.location.reload();
+
             })
             .catch(error => {
                 console.error('Error sending tanggapan:', error);
@@ -198,7 +200,7 @@ const PengaduanPage = () => {
                             >
                                 Cetak PDF
                             </button>
-                            <button onClick={onDownload} className='w-[200px] px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 focus:outline-none ml-3'>EXCEL</button>
+                            <button onClick={onDownload} className='w-[200px] px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 focus:outline-none ml-3'>Cetak Excel</button>
                             {/* <CsvDownload
                                 datas={pengaduanData}
                                 text="Cetak Excel"

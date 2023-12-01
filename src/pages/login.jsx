@@ -83,7 +83,7 @@ export const Login = () => {
                                     navigate('/halamanBarang');
                                 } else {
                                     // navigate('/Pengaduan');
-                                    window.location.href = '/pengaduan'; // Gantilah dengan URL yang sesuai
+                                    window.location.href = '/Pengaduan'; // Gantilah dengan URL yang sesuai
 
                                 }
                             }
